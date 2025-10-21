@@ -27,16 +27,17 @@ class ElDoradoTrackApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider(create: (context) => TreasureProvider()..initialize()),
         ChangeNotifierProvider.value(value: LocaleService()),
+        ChangeNotifierProvider.value(value: ThemeService()),
         StreamProvider.value(
           value: ThemeService().themeStream,
           initialData: ThemeService().currentTheme,
         ),
       ],
-      child: Consumer2<AppThemeData, LocaleService>(
-        builder: (context, theme, localeService, child) {
+      child: Consumer3<AppThemeData, LocaleService, ThemeService>(
+        builder: (context, theme, localeService, themeService, child) {
           return MaterialApp(
             title: AppConstants.appName,
-            theme: ThemeService().toFlutterTheme(),
+            theme: themeService.toFlutterTheme(),
             locale: localeService.currentLocale,
             supportedLocales: LocaleService.supportedLocales,
             localizationsDelegates: const [

@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.doradotrack.com"
+    namespace = "com.doradotrack.nuno"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -21,7 +21,7 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.doradotrack.com"
+        applicationId = "com.doradotrack.nuno"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion

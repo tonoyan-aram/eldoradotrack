@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/app_theme.dart';
 import '../constants/predefined_themes.dart';
 
-class ThemeService {
+class ThemeService extends ChangeNotifier {
   static final ThemeService _instance = ThemeService._internal();
   factory ThemeService() => _instance;
   ThemeService._internal();
@@ -33,11 +33,13 @@ class ThemeService {
       if (theme != null) {
         _currentTheme = theme;
         _themeController.add(_currentTheme);
+        notifyListeners(); // Notify listeners of the loaded theme
       }
     } catch (e) {
       debugPrint('Error loading theme: $e');
       _currentTheme = PredefinedThemes.elDoradoGold;
       _themeController.add(_currentTheme);
+      notifyListeners(); // Notify listeners of the fallback theme
     }
   }
 
@@ -57,6 +59,7 @@ class ThemeService {
 
     _currentTheme = theme;
     _themeController.add(_currentTheme);
+    notifyListeners(); // Notify listeners of the change
     await _saveTheme();
 
     // Haptic feedback
