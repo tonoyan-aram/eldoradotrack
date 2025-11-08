@@ -6,6 +6,7 @@ import '../models/treasure_entry.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/candy_scaffold.dart';
 
 class AddTreasureScreen extends StatefulWidget {
   final TreasureEntry? existingEntry;
@@ -20,7 +21,7 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
   final _formKey = GlobalKey<FormState>();
   final _textController = TextEditingController();
   final _valueController = TextEditingController();
-  
+
   List<TreasureType> _selectedTypes = [];
   bool _isLoading = false;
 
@@ -48,7 +49,7 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
     final l10n = AppLocalizations.of(context);
     final isEditing = widget.existingEntry != null;
 
-    return Scaffold(
+    return CandyScaffold(
       appBar: AppBar(
         title: Text(isEditing ? 'Edit Treasure' : l10n.addNewTreasure),
         actions: [
@@ -92,7 +93,7 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
                   return null;
                 },
               ),
-              
+
               const SizedBox(height: 24),
 
               // Treasure types
@@ -119,7 +120,8 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
                     onSelected: (selected) {
                       setState(() {
                         if (selected) {
-                          if (_selectedTypes.length < AppConstants.maxTagsPerEntry) {
+                          if (_selectedTypes.length <
+                              AppConstants.maxTagsPerEntry) {
                             _selectedTypes.add(type);
                           }
                         } else {
@@ -127,10 +129,13 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
                         }
                       });
                     },
-                    selectedColor: AppColors.treasureColors[type.name]?.withOpacity(0.2),
+                    selectedColor: AppColors.treasureColors[type.name]
+                        ?.withOpacity(0.2),
                     checkmarkColor: AppColors.treasureColors[type.name],
                     side: BorderSide(
-                      color: AppColors.treasureColors[type.name] ?? AppColors.primary,
+                      color:
+                          AppColors.treasureColors[type.name] ??
+                          AppColors.primary,
                     ),
                   );
                 }).toList(),
@@ -207,7 +212,7 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
     try {
       final provider = Provider.of<TreasureProvider>(context, listen: false);
       final value = int.parse(_valueController.text);
-      
+
       if (widget.existingEntry != null) {
         // Update existing entry
         final updatedEntry = widget.existingEntry!.copyWith(
@@ -235,8 +240,8 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
-              widget.existingEntry != null 
-                  ? 'Treasure updated successfully!' 
+              widget.existingEntry != null
+                  ? 'Treasure updated successfully!'
                   : 'Treasure added successfully!',
             ),
             backgroundColor: AppColors.success,
@@ -274,7 +279,10 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
           ),
           TextButton(
             onPressed: () => Navigator.of(context).pop(true),
-            child: const Text('Delete', style: TextStyle(color: AppColors.error)),
+            child: const Text(
+              'Delete',
+              style: TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),
@@ -284,7 +292,7 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
       try {
         final provider = Provider.of<TreasureProvider>(context, listen: false);
         await provider.deleteTreasureEntry(widget.existingEntry!.id);
-        
+
         Navigator.of(context).pop();
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -303,4 +311,3 @@ class _AddTreasureScreenState extends State<AddTreasureScreen> {
     }
   }
 }
-

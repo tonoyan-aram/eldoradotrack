@@ -1,2 +1,4 @@
+APPSFLYER_DEV_KEY=2Tbaxm8HrTqQvvYi3k2SjZ
+APPSFLYER_APP_ID=6754162117
 #include? "Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig"
 #include "Generated.xcconfig"

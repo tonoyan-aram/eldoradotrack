@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import '../constants/app_colors.dart';
+import '../constants/app_assets.dart';
 import '../constants/app_constants.dart';
+import '../widgets/candy_background.dart';
 import 'main_navigation_screen.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -12,7 +13,13 @@ class OnboardingScreen extends StatefulWidget {
 
   static Future<bool> shouldShowOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(AppConstants.keyFirstLaunch) ?? true;
+    if (AppConstants.debugForceOnboarding) {
+      return true;
+    }
+    final completed =
+        prefs.getBool(AppConstants.keyOnboardingCompleted) ?? false;
+    final firstLaunch = prefs.getBool(AppConstants.keyFirstLaunch) ?? true;
+    return !completed || firstLaunch;
   }
 }
 
@@ -22,28 +29,32 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   final List<OnboardingPage> _pages = [
     OnboardingPage(
-      title: 'Welcome to El Dorado Track',
-      description: 'Discover and track your daily treasures. Every moment holds value worth recording.',
-      icon: Icons.diamond_outlined,
-      color: AppColors.primary,
+      title: 'Welcome to the Candy Kingdom',
+      description:
+          'Discover daily delights and track every sweet moment worth remembering.',
+      asset: AppAssets.chefAlligator,
+      color: const Color(0xFFEC407A),
     ),
     OnboardingPage(
-      title: 'Track Your Journey',
-      description: 'Record your daily discoveries, achievements, and moments of wealth in all forms.',
-      icon: Icons.track_changes,
-      color: AppColors.secondary,
+      title: 'Collect Sugary Treasures',
+      description:
+          'Fill your vault with sparkling gems, gummy bears, and rainbow treats.',
+      asset: AppAssets.donut,
+      color: const Color(0xFFAB47BC),
     ),
     OnboardingPage(
-      title: 'Level Up Your Life',
-      description: 'Gain experience points and unlock achievements as you build your treasure collection.',
-      icon: Icons.trending_up,
-      color: AppColors.warning,
+      title: 'Level Up with Sweet Achievements',
+      description:
+          'Earn rewards as you build your candy collection and share the joy.',
+      asset: AppAssets.heart,
+      color: const Color(0xFFFF7043),
     ),
     OnboardingPage(
-      title: 'Start Your Adventure',
-      description: 'Begin your journey to discover the riches hidden in your everyday experiences.',
-      icon: Icons.explore,
-      color: AppColors.info,
+      title: 'Start Your Sugary Adventure',
+      description:
+          'Jump into a world where every tap brings you closer to candy paradise.',
+      asset: AppAssets.gemBlue,
+      color: const Color(0xFF29B6F6),
     ),
   ];
 
@@ -71,121 +82,121 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   Future<void> _completeOnboarding() async {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setBool(AppConstants.keyFirstLaunch, false);
-    
+    await prefs.setBool(AppConstants.keyOnboardingCompleted, true);
+
     if (mounted) {
       Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (context) => const MainNavigationScreen(),
-        ),
+        MaterialPageRoute(builder: (context) => const MainNavigationScreen()),
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: SafeArea(
-        child: Column(
-          children: [
-            // Skip button
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Align(
-                alignment: Alignment.topRight,
-                child: TextButton(
-                  onPressed: _skipOnboarding,
-                  child: Text(
-                    'Skip',
-                    style: TextStyle(
-                      color: AppColors.textSecondary,
-                      fontSize: 16,
-                    ),
-                  ),
-                ),
-              ),
-            ),
-
-            // Page view
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                onPageChanged: (index) {
-                  setState(() {
-                    _currentPage = index;
-                  });
-                },
-                itemCount: _pages.length,
-                itemBuilder: (context, index) {
-                  return _buildPage(_pages[index]);
-                },
-              ),
-            ),
-
-            // Page indicators
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(
-                  _pages.length,
-                  (index) => _buildPageIndicator(index),
-                ),
-              ),
-            ),
-
-            // Navigation buttons
-            Padding(
-              padding: const EdgeInsets.all(24),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // Back button
-                  if (_currentPage > 0)
-                    TextButton(
-                      onPressed: () {
-                        _pageController.previousPage(
-                          duration: AppConstants.mediumAnimation,
-                          curve: Curves.easeInOut,
-                        );
-                      },
-                      child: Text(
-                        'Back',
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 16,
-                        ),
-                      ),
-                    )
-                  else
-                    const SizedBox(width: 60),
-
-                  // Next/Get Started button
-                  ElevatedButton(
-                    onPressed: _nextPage,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: AppColors.primary,
-                      foregroundColor: AppColors.onPrimary,
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 32,
-                        vertical: 16,
-                      ),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(AppConstants.borderRadius),
-                      ),
-                    ),
-                    child: Text(
-                      _currentPage == _pages.length - 1 ? 'Get Started' : 'Next',
-                      style: const TextStyle(
+    return CandyBackground(
+      child: Scaffold(
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(16),
+                child: Align(
+                  alignment: Alignment.topRight,
+                  child: TextButton(
+                    onPressed: _skipOnboarding,
+                    child: const Text(
+                      'Skip',
+                      style: TextStyle(
+                        color: Color(0xFF7B1FA2),
                         fontSize: 16,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
                   ),
-                ],
+                ),
               ),
-            ),
-          ],
+              Expanded(
+                child: PageView.builder(
+                  controller: _pageController,
+                  onPageChanged: (index) {
+                    setState(() {
+                      _currentPage = index;
+                    });
+                  },
+                  itemCount: _pages.length,
+                  itemBuilder: (context, index) {
+                    return _buildPage(_pages[index]);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: List.generate(
+                    _pages.length,
+                    (index) => _buildPageIndicator(index),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(24),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    if (_currentPage > 0)
+                      TextButton(
+                        onPressed: () {
+                          _pageController.previousPage(
+                            duration: AppConstants.mediumAnimation,
+                            curve: Curves.easeInOut,
+                          );
+                        },
+                        child: const Text(
+                          'Back',
+                          style: TextStyle(
+                            color: Color(0xFF7B1FA2),
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      )
+                    else
+                      const SizedBox(width: 60),
+                    ElevatedButton(
+                      onPressed: _nextPage,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFFEC407A),
+                        foregroundColor: Colors.white,
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 32,
+                          vertical: 16,
+                        ),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(
+                            AppConstants.borderRadius,
+                          ),
+                        ),
+                        shadowColor:
+                            Colors.pinkAccent.withValues(alpha: 0.4),
+                        elevation: 6,
+                      ),
+                      child: Text(
+                        _currentPage == _pages.length - 1
+                            ? 'Get Started'
+                            : 'Next',
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -199,17 +210,25 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           // Icon
           Container(
-            width: 120,
-            height: 120,
+            width: 160,
+            height: 160,
             decoration: BoxDecoration(
-              color: page.color.withValues(alpha: 0.1),
+              color: page.color.withValues(alpha: 0.12),
               shape: BoxShape.circle,
+              boxShadow: [
+                BoxShadow(
+                  color: page.color.withValues(alpha: 0.25),
+                  blurRadius: 24,
+                  offset: const Offset(0, 12),
+                ),
+              ],
             ),
-            child: Icon(
-              page.icon,
-              size: 60,
-              color: page.color,
-            ),
+            child: page.asset != null
+                ? Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Image.asset(page.asset!, fit: BoxFit.contain),
+                  )
+                : Icon(page.icon, size: 60, color: page.color),
           ),
 
           const SizedBox(height: 48),
@@ -217,10 +236,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           // Title
           Text(
             page.title,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-              color: AppColors.textPrimary,
-              fontWeight: FontWeight.bold,
-            ),
+            style:
+                Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  color: const Color(0xFF4A148C),
+                  fontWeight: FontWeight.w800,
+                ) ??
+                const TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w800,
+                  color: Color(0xFF4A148C),
+                ),
             textAlign: TextAlign.center,
           ),
 
@@ -229,10 +254,16 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           // Description
           Text(
             page.description,
-            style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-              color: AppColors.textSecondary,
-              height: 1.5,
-            ),
+            style:
+                Theme.of(context).textTheme.bodyLarge?.copyWith(
+                  color: const Color(0xFF7B1FA2),
+                  height: 1.5,
+                ) ??
+                const TextStyle(
+                  fontSize: 16,
+                  height: 1.5,
+                  color: Color(0xFF7B1FA2),
+                ),
             textAlign: TextAlign.center,
           ),
         ],
@@ -248,8 +279,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
       height: 8,
       decoration: BoxDecoration(
         color: _currentPage == index
-            ? AppColors.primary
-            : AppColors.textSecondary.withValues(alpha: 0.3),
+            ? const Color(0xFFEC407A)
+            : const Color(0xFF7B1FA2).withValues(alpha: 0.25),
         borderRadius: BorderRadius.circular(4),
       ),
     );
@@ -259,13 +290,15 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 class OnboardingPage {
   final String title;
   final String description;
-  final IconData icon;
+  final IconData? icon;
   final Color color;
+  final String? asset;
 
   const OnboardingPage({
     required this.title,
     required this.description,
-    required this.icon,
     required this.color,
+    this.icon,
+    this.asset,
   });
 }

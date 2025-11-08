@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+
 import '../constants/app_colors.dart';
+import '../widgets/candy_scaffold.dart';
 
 class PrivacyPolicyScreen extends StatefulWidget {
   const PrivacyPolicyScreen({super.key});
@@ -14,18 +16,14 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
   bool isLoading = true;
   String? error;
 
-  static const String privacyPolicyUrl = 
+  static const String privacyPolicyUrl =
       'https://docs.google.com/document/d/1FshZmFA-Y3BHHHsPUshY7b04Iw5kS_3TqvOxymttnVA/edit?usp=sharing';
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
+    return CandyScaffold(
       appBar: AppBar(
         title: const Text('Privacy Policy'),
-        backgroundColor: AppColors.primary,
-        foregroundColor: AppColors.onPrimary,
-        elevation: 0,
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
@@ -42,11 +40,7 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(
-                    Icons.error_outline,
-                    size: 64,
-                    color: AppColors.error,
-                  ),
+                  Icon(Icons.error_outline, size: 64, color: AppColors.error),
                   const SizedBox(height: 16),
                   Text(
                     'Failed to load Privacy Policy',
@@ -123,7 +117,9 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CircularProgressIndicator(
-                      valueColor: AlwaysStoppedAnimation<Color>(AppColors.primary),
+                      valueColor: AlwaysStoppedAnimation<Color>(
+                        AppColors.primary,
+                      ),
                     ),
                     SizedBox(height: 16),
                     Text(
@@ -142,4 +138,3 @@ class _PrivacyPolicyScreenState extends State<PrivacyPolicyScreen> {
     );
   }
 }
-

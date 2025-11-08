@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/theme_service.dart';
-import '../models/app_theme.dart';
 import '../constants/app_colors.dart';
 import '../l10n/app_localizations.dart';
+import '../models/app_theme.dart';
+import '../services/theme_service.dart';
+import '../widgets/candy_scaffold.dart';
 
 class ThemesScreen extends StatelessWidget {
   const ThemesScreen({super.key});
@@ -12,10 +13,8 @@ class ThemesScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.theme),
-      ),
+    return CandyScaffold(
+      appBar: AppBar(title: Text(l10n.theme)),
       body: Consumer<ThemeService>(
         builder: (context, themeService, child) {
           final currentTheme = themeService.currentTheme;
@@ -49,21 +48,24 @@ class ThemesScreen extends StatelessWidget {
                               children: [
                                 Text(
                                   currentTheme.name,
-                                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                  style: Theme.of(context).textTheme.titleMedium
+                                      ?.copyWith(fontWeight: FontWeight.w600),
                                 ),
                                 const SizedBox(height: 4),
                                 Text(
                                   currentTheme.description,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: AppColors.textSecondary,
+                                      ),
                                 ),
                                 if (currentTheme.isPremium) ...[
                                   const SizedBox(height: 4),
                                   Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                    padding: const EdgeInsets.symmetric(
+                                      horizontal: 8,
+                                      vertical: 2,
+                                    ),
                                     decoration: BoxDecoration(
                                       color: AppColors.primary,
                                       borderRadius: BorderRadius.circular(12),
@@ -99,7 +101,7 @@ class ThemesScreen extends StatelessWidget {
 
               ...availableThemes.map((theme) {
                 final isSelected = theme.id == currentTheme.id;
-                
+
                 return Card(
                   margin: const EdgeInsets.only(bottom: 12),
                   child: InkWell(
@@ -117,7 +119,9 @@ class ThemesScreen extends StatelessWidget {
                               color: theme.colors.primary.withOpacity(0.1),
                               borderRadius: BorderRadius.circular(30),
                               border: Border.all(
-                                color: isSelected ? theme.colors.primary : AppColors.border,
+                                color: isSelected
+                                    ? theme.colors.primary
+                                    : AppColors.border,
                                 width: 2,
                               ),
                             ),
@@ -144,17 +148,25 @@ class ThemesScreen extends StatelessWidget {
                                     Expanded(
                                       child: Text(
                                         theme.name,
-                                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                                          fontWeight: FontWeight.w600,
-                                        ),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium
+                                            ?.copyWith(
+                                              fontWeight: FontWeight.w600,
+                                            ),
                                       ),
                                     ),
                                     if (theme.isPremium)
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
                                         decoration: BoxDecoration(
                                           color: AppColors.primary,
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                         ),
                                         child: const Text(
                                           'PREMIUM',
@@ -170,21 +182,29 @@ class ThemesScreen extends StatelessWidget {
                                 const SizedBox(height: 4),
                                 Text(
                                   theme.description,
-                                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                    color: AppColors.textSecondary,
-                                  ),
+                                  style: Theme.of(context).textTheme.bodyMedium
+                                      ?.copyWith(
+                                        color: AppColors.textSecondary,
+                                      ),
                                 ),
                                 const SizedBox(height: 8),
                                 Row(
                                   children: [
                                     // Theme type indicator
                                     Container(
-                                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                      padding: const EdgeInsets.symmetric(
+                                        horizontal: 8,
+                                        vertical: 2,
+                                      ),
                                       decoration: BoxDecoration(
-                                        color: _getTypeColor(theme.type).withOpacity(0.1),
+                                        color: _getTypeColor(
+                                          theme.type,
+                                        ).withOpacity(0.1),
                                         borderRadius: BorderRadius.circular(12),
                                         border: Border.all(
-                                          color: _getTypeColor(theme.type).withOpacity(0.3),
+                                          color: _getTypeColor(
+                                            theme.type,
+                                          ).withOpacity(0.3),
                                         ),
                                       ),
                                       child: Text(
@@ -200,12 +220,20 @@ class ThemesScreen extends StatelessWidget {
                                     // Rarity indicator
                                     if (theme.isPremium)
                                       Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                                        padding: const EdgeInsets.symmetric(
+                                          horizontal: 8,
+                                          vertical: 2,
+                                        ),
                                         decoration: BoxDecoration(
-                                          color: AppColors.primary.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(12),
+                                          color: AppColors.primary.withOpacity(
+                                            0.1,
+                                          ),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           border: Border.all(
-                                            color: AppColors.primary.withOpacity(0.3),
+                                            color: AppColors.primary
+                                                .withOpacity(0.3),
                                           ),
                                         ),
                                         child: Text(
@@ -269,4 +297,3 @@ class ThemesScreen extends StatelessWidget {
     }
   }
 }
-

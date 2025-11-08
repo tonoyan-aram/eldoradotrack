@@ -3,13 +3,14 @@ import 'package:provider/provider.dart';
 import '../services/treasure_provider.dart';
 import '../constants/app_colors.dart';
 import '../constants/app_constants.dart';
-import '../widgets/achievement_notification.dart';
 import '../l10n/app_localizations.dart';
-import 'add_treasure_screen.dart';
-import 'treasures_screen.dart';
-import 'insights_screen.dart';
+import '../widgets/achievement_notification.dart';
+import '../widgets/candy_scaffold.dart';
 import 'achievements_screen.dart';
+import 'add_treasure_screen.dart';
+import 'insights_screen.dart';
 import 'settings_screen.dart';
+import 'treasures_screen.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -33,23 +34,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    
-    return Scaffold(
-      key: _scaffoldKey,
-      backgroundColor: AppColors.background,
+
+    return CandyScaffold(
+      scaffoldKey: _scaffoldKey,
       drawer: _buildDrawer(l10n),
       body: Stack(
         children: [
           IndexedStack(index: _currentIndex, children: _screens),
-          // Achievement notifications
           Consumer<TreasureProvider>(
             builder: (context, provider, child) {
               if (provider.newAchievements.isNotEmpty) {
                 return AchievementNotification(
                   achievement: provider.newAchievements.first,
-                  onDismiss: () {
-                    provider.clearNewAchievements();
-                  },
+                  onDismiss: provider.clearNewAchievements,
                 );
               }
               return const SizedBox.shrink();
@@ -65,12 +62,18 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           });
         },
         type: BottomNavigationBarType.fixed,
-        backgroundColor: AppColors.background,
+        backgroundColor: Colors.white.withValues(alpha: 0.9),
         selectedItemColor: AppColors.primary,
         unselectedItemColor: AppColors.textSecondary,
         items: [
-          BottomNavigationBarItem(icon: const Icon(Icons.today), label: l10n.today),
-          BottomNavigationBarItem(icon: const Icon(Icons.auto_awesome), label: l10n.treasures),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.today),
+            label: l10n.today,
+          ),
+          BottomNavigationBarItem(
+            icon: const Icon(Icons.auto_awesome),
+            label: l10n.treasures,
+          ),
           BottomNavigationBarItem(
             icon: const Icon(Icons.analytics),
             label: l10n.insights,
@@ -98,6 +101,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
               child: const Icon(Icons.add),
             )
           : null,
+      extendBody: true,
     );
   }
 
@@ -279,22 +283,19 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
 class TodayScreen extends StatelessWidget {
   final VoidCallback? onMenuTap;
-  
+
   const TodayScreen({super.key, this.onMenuTap});
 
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
-    
-    return Scaffold(
-      backgroundColor: AppColors.background,
+
+    return CandyScaffold(
       appBar: AppBar(
         title: Text(l10n.today),
         leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu),
-            onPressed: onMenuTap,
-          ),
+          builder: (context) =>
+              IconButton(icon: const Icon(Icons.menu), onPressed: onMenuTap),
         ),
       ),
       body: Consumer<TreasureProvider>(
@@ -358,7 +359,9 @@ class TodayScreen extends StatelessWidget {
                                     spacing: 4,
                                     runSpacing: 4,
                                     children: entry.types.map((type) {
-                                      final typeColor = AppColors.treasureColors[type.name] ?? AppColors.primary;
+                                      final typeColor =
+                                          AppColors.treasureColors[type.name] ??
+                                          AppColors.primary;
                                       return Container(
                                         padding: const EdgeInsets.symmetric(
                                           horizontal: 8,
@@ -366,7 +369,9 @@ class TodayScreen extends StatelessWidget {
                                         ),
                                         decoration: BoxDecoration(
                                           color: typeColor.withOpacity(0.1),
-                                          borderRadius: BorderRadius.circular(12),
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
                                           border: Border.all(
                                             color: typeColor.withOpacity(0.3),
                                           ),
@@ -376,7 +381,9 @@ class TodayScreen extends StatelessWidget {
                                           children: [
                                             Text(
                                               type.emoji,
-                                              style: const TextStyle(fontSize: 12),
+                                              style: const TextStyle(
+                                                fontSize: 12,
+                                              ),
                                             ),
                                             const SizedBox(width: 4),
                                             Text(
@@ -453,7 +460,8 @@ class TodayScreen extends StatelessWidget {
                               onPressed: () {
                                 Navigator.of(context).push(
                                   MaterialPageRoute(
-                                    builder: (context) => const AddTreasureScreen(),
+                                    builder: (context) =>
+                                        const AddTreasureScreen(),
                                   ),
                                 );
                               },
@@ -570,4 +578,3 @@ class TodayScreen extends StatelessWidget {
     return '${now.day} ${l10n.getMonthName(now.month)} ${now.year}';
   }
 }
-

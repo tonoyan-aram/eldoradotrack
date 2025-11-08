@@ -4,6 +4,7 @@ import '../services/treasure_provider.dart';
 import '../models/treasure_entry.dart';
 import '../constants/app_colors.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/candy_scaffold.dart';
 import 'add_treasure_screen.dart';
 
 class TreasuresScreen extends StatefulWidget {
@@ -21,7 +22,7 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return CandyScaffold(
       appBar: AppBar(
         title: Text(l10n.treasures),
         actions: [
@@ -41,16 +42,18 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
                 value: null,
                 child: Text('All Types'),
               ),
-              ...TreasureType.values.map((type) => PopupMenuItem<TreasureType?>(
-                value: type,
-                child: Row(
-                  children: [
-                    Text(type.emoji),
-                    const SizedBox(width: 8),
-                    Text(type.displayName),
-                  ],
+              ...TreasureType.values.map(
+                (type) => PopupMenuItem<TreasureType?>(
+                  value: type,
+                  child: Row(
+                    children: [
+                      Text(type.emoji),
+                      const SizedBox(width: 8),
+                      Text(type.displayName),
+                    ],
+                  ),
                 ),
-              )),
+              ),
             ],
           ),
         ],
@@ -84,13 +87,12 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.of(context).push(
-            MaterialPageRoute(
-              builder: (context) => const AddTreasureScreen(),
-            ),
+            MaterialPageRoute(builder: (context) => const AddTreasureScreen()),
           );
         },
         child: const Icon(Icons.add),
       ),
+      extendBody: true,
     );
   }
 
@@ -99,16 +101,19 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
 
     // Filter by type
     if (_selectedFilter != null) {
-      filtered = filtered.where((entry) => 
-        entry.types.contains(_selectedFilter!)
-      ).toList();
+      filtered = filtered
+          .where((entry) => entry.types.contains(_selectedFilter!))
+          .toList();
     }
 
     // Filter by search query
     if (_searchQuery.isNotEmpty) {
-      filtered = filtered.where((entry) => 
-        entry.text.toLowerCase().contains(_searchQuery.toLowerCase())
-      ).toList();
+      filtered = filtered
+          .where(
+            (entry) =>
+                entry.text.toLowerCase().contains(_searchQuery.toLowerCase()),
+          )
+          .toList();
     }
 
     return filtered;
@@ -128,7 +133,7 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
             ),
             const SizedBox(height: 24),
             Text(
-              _selectedFilter != null 
+              _selectedFilter != null
                   ? 'No ${_selectedFilter!.displayName.toLowerCase()} treasures found'
                   : 'No treasures found',
               style: Theme.of(context).textTheme.headlineMedium?.copyWith(
@@ -141,9 +146,9 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
               _searchQuery.isNotEmpty
                   ? 'Try adjusting your search terms'
                   : 'Start adding treasures to build your collection!',
-              style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                color: AppColors.textSecondary,
-              ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 32),
@@ -193,11 +198,7 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
                   ),
                   Row(
                     children: [
-                      Icon(
-                        Icons.star,
-                        size: 16,
-                        color: AppColors.primary,
-                      ),
+                      Icon(Icons.star, size: 16, color: AppColors.primary),
                       const SizedBox(width: 4),
                       Text(
                         '${entry.value}',
@@ -210,9 +211,9 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
                   ),
                 ],
               ),
-              
+
               const SizedBox(height: 8),
-              
+
               // Description
               Text(
                 entry.text,
@@ -220,16 +221,18 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,
               ),
-              
+
               if (entry.types.isNotEmpty) ...[
                 const SizedBox(height: 12),
-                
+
                 // Treasure types
                 Wrap(
                   spacing: 6,
                   runSpacing: 6,
                   children: entry.types.map((type) {
-                    final typeColor = AppColors.treasureColors[type.name] ?? AppColors.primary;
+                    final typeColor =
+                        AppColors.treasureColors[type.name] ??
+                        AppColors.primary;
                     return Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -238,9 +241,7 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
                       decoration: BoxDecoration(
                         color: typeColor.withOpacity(0.1),
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: typeColor.withOpacity(0.3),
-                        ),
+                        border: Border.all(color: typeColor.withOpacity(0.3)),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
@@ -274,7 +275,7 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date).inDays;
-    
+
     if (difference == 0) {
       return 'Today';
     } else if (difference == 1) {
@@ -322,4 +323,3 @@ class _TreasuresScreenState extends State<TreasuresScreen> {
     );
   }
 }
-

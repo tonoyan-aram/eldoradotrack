@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../services/treasure_provider.dart';
-import '../services/theme_service.dart';
-import '../services/locale_service.dart';
 import '../constants/app_colors.dart';
 import '../l10n/app_localizations.dart';
-import 'themes_screen.dart';
+import '../services/locale_service.dart';
+import '../services/theme_service.dart';
+import '../services/treasure_provider.dart';
+import '../widgets/candy_scaffold.dart';
 import 'privacy_policy_screen.dart';
+import 'themes_screen.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -15,25 +16,25 @@ class SettingsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(l10n.settings),
-      ),
+    return CandyScaffold(
+      appBar: AppBar(title: Text(l10n.settings)),
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
           // Preferences Section
           _buildSectionHeader(context, 'Preferences'),
-          
+
           // Language
           _buildSettingsTile(
             context,
             icon: Icons.language,
             title: l10n.language,
-            subtitle: LocaleService().getLocaleName(LocaleService().currentLocale),
+            subtitle: LocaleService().getLocaleName(
+              LocaleService().currentLocale,
+            ),
             onTap: () => _showLanguageDialog(context),
           ),
-          
+
           // Theme
           _buildSettingsTile(
             context,
@@ -42,13 +43,11 @@ class SettingsScreen extends StatelessWidget {
             subtitle: 'Customize appearance',
             onTap: () {
               Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => const ThemesScreen(),
-                ),
+                MaterialPageRoute(builder: (context) => const ThemesScreen()),
               );
             },
           ),
-          
+
           // Animations
           Consumer<TreasureProvider>(
             builder: (context, provider, child) {
@@ -61,12 +60,12 @@ class SettingsScreen extends StatelessWidget {
               );
             },
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // Data Section
           _buildSectionHeader(context, 'Data'),
-          
+
           // Export Data
           _buildSettingsTile(
             context,
@@ -75,35 +74,35 @@ class SettingsScreen extends StatelessWidget {
             subtitle: 'Export your treasures',
             onTap: () => _exportData(context),
           ),
-          
+
           const SizedBox(height: 24),
-          
+
           // About Section
           _buildSectionHeader(context, 'About'),
-          
-                // Privacy Policy
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.privacy_tip,
-                  title: 'Privacy Policy',
-                  subtitle: 'View our privacy policy',
-                  onTap: () {
-                    Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => const PrivacyPolicyScreen(),
-                      ),
-                    );
-                  },
-                ),
 
-                // About
-                _buildSettingsTile(
-                  context,
-                  icon: Icons.info,
-                  title: l10n.about,
-                  subtitle: 'App information',
-                  onTap: () => _showAboutDialog(context),
+          // Privacy Policy
+          _buildSettingsTile(
+            context,
+            icon: Icons.privacy_tip,
+            title: 'Privacy Policy',
+            subtitle: 'View our privacy policy',
+            onTap: () {
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => const PrivacyPolicyScreen(),
                 ),
+              );
+            },
+          ),
+
+          // About
+          _buildSettingsTile(
+            context,
+            icon: Icons.info,
+            title: l10n.about,
+            subtitle: 'App information',
+            onTap: () => _showAboutDialog(context),
+          ),
         ],
       ),
     );
@@ -122,7 +121,8 @@ class SettingsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSettingsTile(BuildContext context, {
+  Widget _buildSettingsTile(
+    BuildContext context, {
     required IconData icon,
     required String title,
     required String subtitle,
@@ -162,7 +162,7 @@ class SettingsScreen extends StatelessWidget {
   Future<void> _showLanguageDialog(BuildContext context) async {
     final localeService = LocaleService();
     final currentLocale = localeService.currentLocale;
-    
+
     await showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
@@ -203,7 +203,7 @@ class SettingsScreen extends StatelessWidget {
     try {
       final provider = Provider.of<TreasureProvider>(context, listen: false);
       await provider.exportEntries();
-      
+
       // In a real app, you would save this to a file or share it
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -241,10 +241,7 @@ class SettingsScreen extends StatelessWidget {
           'Build a collection of meaningful moments and watch your wealth grow!',
         ),
         const SizedBox(height: 16),
-        const Text(
-          'Features:',
-          style: TextStyle(fontWeight: FontWeight.bold),
-        ),
+        const Text('Features:', style: TextStyle(fontWeight: FontWeight.bold)),
         const Text('• Track daily treasures'),
         const Text('• Level up system'),
         const Text('• Achievement system'),

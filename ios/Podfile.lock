@@ -1,4 +1,12 @@
 PODS:
+  - appsflyer_sdk (6.17.7):
+    - appsflyer_sdk/Core (= 6.17.7)
+  - appsflyer_sdk/Core (6.17.7):
+    - AppsFlyerFramework (= 6.17.7)
+    - Flutter
+  - AppsFlyerFramework (6.17.7):
+    - AppsFlyerFramework/Main (= 6.17.7)
+  - AppsFlyerFramework/Main (6.17.7)
   - Flutter (1.0.0)
   - flutter_inappwebview_ios (0.0.1):
     - Flutter
@@ -19,6 +27,7 @@ PODS:
     - FlutterMacOS
 
 DEPENDENCIES:
+  - appsflyer_sdk (from `.symlinks/plugins/appsflyer_sdk/ios`)
   - Flutter (from `Flutter`)
   - flutter_inappwebview_ios (from `.symlinks/plugins/flutter_inappwebview_ios/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
@@ -27,9 +36,12 @@ DEPENDENCIES:
 
 SPEC REPOS:
   trunk:
+    - AppsFlyerFramework
     - OrderedSet
 
 EXTERNAL SOURCES:
+  appsflyer_sdk:
+    :path: ".symlinks/plugins/appsflyer_sdk/ios"
   Flutter:
     :path: Flutter
   flutter_inappwebview_ios:
@@ -42,6 +54,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/sqflite_darwin/darwin"
 
 SPEC CHECKSUMS:
+  appsflyer_sdk: a6fdf00590a89e91bd9794815691ab8738e465b9
+  AppsFlyerFramework: ae7caf1688348f2d7a742037bd4fc6966d39d362
   Flutter: cabc95a1d2626b1b06e7179b784ebcf0c0cde467
   flutter_inappwebview_ios: 6f63631e2c62a7c350263b13fa5427aedefe81d4
   OrderedSet: e539b66b644ff081c73a262d24ad552a69be3a94

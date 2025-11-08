@@ -14,6 +14,12 @@
       "languageVersion": "3.9"
     },
     {
+      "name": "appsflyer_sdk",
+      "rootUri": "file:///Users/annaniksllc/.pub-cache/hosted/pub.dev/appsflyer_sdk-6.17.7+1",
+      "packageUri": "lib/",
+      "languageVersion": "2.17"
+    },
+    {
       "name": "archive",
       "rootUri": "file:///Users/annaniksllc/.pub-cache/hosted/pub.dev/archive-4.0.7",
       "packageUri": "lib/",

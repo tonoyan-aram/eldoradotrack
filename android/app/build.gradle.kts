@@ -28,6 +28,25 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        val resolvedAppsFlyerDevKey =
+            (project.findProperty("APPSFLYER_DEV_KEY") as? String
+                ?: System.getenv("APPSFLYER_DEV_KEY")
+                ?: "2Tbaxm8HrTqQvvYi3k2SjZ")
+
+        val rawAppsFlyerAppId =
+            (project.findProperty("APPSFLYER_APP_ID") as? String
+                ?: System.getenv("APPSFLYER_APP_ID")
+                ?: "6754162117")
+
+        val appsFlyerAndroidAppId =
+            if (rawAppsFlyerAppId.startsWith("id")) rawAppsFlyerAppId else "id$rawAppsFlyerAppId"
+
+        manifestPlaceholders.putAll(
+            mapOf(
+                "appsFlyerDevKey" to resolvedAppsFlyerDevKey,
+                "appsFlyerAppId" to appsFlyerAndroidAppId
+            )
+        )
     }
 
     buildTypes {

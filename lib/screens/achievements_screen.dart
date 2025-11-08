@@ -5,6 +5,7 @@ import '../models/achievement.dart';
 import '../constants/app_colors.dart';
 import '../constants/achievements.dart';
 import '../l10n/app_localizations.dart';
+import '../widgets/candy_scaffold.dart';
 
 class AchievementsScreen extends StatefulWidget {
   const AchievementsScreen({super.key});
@@ -33,7 +34,7 @@ class _AchievementsScreenState extends State<AchievementsScreen>
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context);
 
-    return Scaffold(
+    return CandyScaffold(
       appBar: AppBar(
         title: Text(l10n.achievements),
         bottom: TabBar(
@@ -57,8 +58,12 @@ class _AchievementsScreenState extends State<AchievementsScreen>
           return TabBarView(
             controller: _tabController,
             children: [
-              _buildAchievementsList(provider.achievementService.getUnlockedAchievements()),
-              _buildAchievementsList(provider.achievementService.getLockedAchievements()),
+              _buildAchievementsList(
+                provider.achievementService.getUnlockedAchievements(),
+              ),
+              _buildAchievementsList(
+                provider.achievementService.getLockedAchievements(),
+              ),
             ],
           );
         },
@@ -90,9 +95,9 @@ class _AchievementsScreenState extends State<AchievementsScreen>
               const SizedBox(height: 12),
               Text(
                 'Keep adding treasures to unlock achievements!',
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
                 textAlign: TextAlign.center,
               ),
             ],
@@ -114,7 +119,7 @@ class _AchievementsScreenState extends State<AchievementsScreen>
   Widget _buildAchievementCard(Achievement achievement) {
     final isUnlocked = achievement.isUnlocked;
     final rarityColor = _getRarityColor(achievement.rarity);
-    
+
     return Card(
       margin: const EdgeInsets.only(bottom: 12),
       child: Padding(
@@ -126,7 +131,9 @@ class _AchievementsScreenState extends State<AchievementsScreen>
               width: 60,
               height: 60,
               decoration: BoxDecoration(
-                color: isUnlocked ? rarityColor.withOpacity(0.1) : AppColors.surface,
+                color: isUnlocked
+                    ? rarityColor.withOpacity(0.1)
+                    : AppColors.surface,
                 borderRadius: BorderRadius.circular(30),
                 border: Border.all(
                   color: isUnlocked ? rarityColor : AppColors.border,
@@ -143,9 +150,9 @@ class _AchievementsScreenState extends State<AchievementsScreen>
                 ),
               ),
             ),
-            
+
             const SizedBox(width: 16),
-            
+
             // Achievement details
             Expanded(
               child: Column(
@@ -157,15 +164,21 @@ class _AchievementsScreenState extends State<AchievementsScreen>
                       Expanded(
                         child: Text(
                           achievement.title,
-                          style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                            color: isUnlocked ? AppColors.textPrimary : AppColors.textDisabled,
-                            fontWeight: FontWeight.w600,
-                          ),
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(
+                                color: isUnlocked
+                                    ? AppColors.textPrimary
+                                    : AppColors.textDisabled,
+                                fontWeight: FontWeight.w600,
+                              ),
                         ),
                       ),
                       if (isUnlocked)
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 8,
+                            vertical: 2,
+                          ),
                           decoration: BoxDecoration(
                             color: rarityColor,
                             borderRadius: BorderRadius.circular(12),
@@ -181,19 +194,21 @@ class _AchievementsScreenState extends State<AchievementsScreen>
                         ),
                     ],
                   ),
-                  
+
                   const SizedBox(height: 4),
-                  
+
                   // Description
                   Text(
                     achievement.description,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isUnlocked ? AppColors.textSecondary : AppColors.textDisabled,
+                      color: isUnlocked
+                          ? AppColors.textSecondary
+                          : AppColors.textDisabled,
                     ),
                   ),
-                  
+
                   const SizedBox(height: 8),
-                  
+
                   // Progress
                   if (!isUnlocked && achievement.currentProgress > 0) ...[
                     Row(
@@ -202,15 +217,16 @@ class _AchievementsScreenState extends State<AchievementsScreen>
                           child: LinearProgressIndicator(
                             value: achievement.progressPercentage,
                             backgroundColor: AppColors.surface,
-                            valueColor: AlwaysStoppedAnimation<Color>(rarityColor),
+                            valueColor: AlwaysStoppedAnimation<Color>(
+                              rarityColor,
+                            ),
                           ),
                         ),
                         const SizedBox(width: 8),
                         Text(
                           '${achievement.currentProgress}/${achievement.targetValue}',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.textSecondary,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(color: AppColors.textSecondary),
                         ),
                       ],
                     ),
@@ -223,24 +239,21 @@ class _AchievementsScreenState extends State<AchievementsScreen>
                       ),
                     ),
                   ],
-                  
+
                   // XP reward
                   if (achievement.xpReward > 0) ...[
                     const SizedBox(height: 4),
                     Row(
                       children: [
-                        Icon(
-                          Icons.star,
-                          size: 14,
-                          color: AppColors.primary,
-                        ),
+                        Icon(Icons.star, size: 14, color: AppColors.primary),
                         const SizedBox(width: 4),
                         Text(
                           '${achievement.xpReward} XP',
-                          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: AppColors.primary,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          style: Theme.of(context).textTheme.bodySmall
+                              ?.copyWith(
+                                color: AppColors.primary,
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ],
                     ),
@@ -283,7 +296,7 @@ class _AchievementsScreenState extends State<AchievementsScreen>
   String _formatDate(DateTime date) {
     final now = DateTime.now();
     final difference = now.difference(date).inDays;
-    
+
     if (difference == 0) {
       return 'today';
     } else if (difference == 1) {
@@ -295,4 +308,3 @@ class _AchievementsScreenState extends State<AchievementsScreen>
     }
   }
 }
-
